@@ -1,0 +1,127 @@
+openapi: 3.0.0
+info:
+  title: Points API
+  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  version: 1.0.0
+servers:
+  - url: https://api
+
+paths:
+  /campaigns/create:
+    post:
+      summary: Creates a new campaign.
+      description: |
+        Creates a new campaign, returning an id for the campaign and an API key.
+        This API key provides authorization for endpoints related to that campaign.
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  apiKey:
+                    type: string
+                    example: 20a067cd-6864-4293-95e4-b1350cd0c1fa
+                  campaignId:
+                    type: integer
+                    example: 1234
+                required:
+                  - apiKey
+                  - campaignId
+
+  /campaigns/{campaignId}/points:
+    get:
+      summary: Get the number of points for a specific address.
+      description: Optionally return only the points under a specified event name.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: campaignId
+          schema:
+            type: integer
+          required: true
+        - in: query
+          name: address
+          description: Ethereum address
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: event
+          description: Name of the event to search for
+          schema:
+            type: string
+          required: false
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: number
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+    put:
+      summary: Add points to a specific address.
+      description: |
+        Returns the total number of points for the specified address.
+        If an event name is specified, only count the points under that event.
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - in: path
+          name: campaignId
+          schema:
+            type: integer
+          required: true
+      requestBody:
+        description: a
+        required: true
+        content:
+          application/json:
+            schema:
+                type: object
+                properties:
+                  address:
+                    type: string
+                    example: 20a067cd-6864-4293-95e4-b1350cd0c1fa
+                  event:
+                    type: string
+                    example: foo
+                  points:
+                    type: integer
+                    example: 1000
+                required:
+                  - address
+                  - event
+                  - points
+            examples:
+              example:
+                value:
+                  address: 20a067cd-6864-4293-95e4-b1350cd0c1fa
+                  event: foo
+                  points: 1000
+
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: number
+        401:
+          $ref: "#/components/responses/UnauthorizedError"
+
+components:
+  responses:
+    UnauthorizedError:
+      description: API key is missing or invalid.
+
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-KEY
