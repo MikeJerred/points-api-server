@@ -18,7 +18,7 @@ app.use('/campaigns', campaignRoutes);
 
 app.use(errorHandler);
 
-const port = parseInt(process.env['PORT'] ?? '5123');
+const port = parseInt(process.env['PORT'] ?? '8080');
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
 
 export default app;

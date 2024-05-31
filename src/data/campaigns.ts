@@ -35,7 +35,7 @@ export async function getPoints(apiKey: string, campaignId: number, address: `0x
   await validateApiKey(apiKey, campaignId);
 
   const result = await db.selectFrom('campaign')
-    .where('id', '=', campaignId)
+    .where('campaign.id', '=', campaignId)
     .innerJoin('point', 'point.campaign_id', 'campaign.id')
     .where('point.address', '=', address)
     .$if(!!eventName, qb => qb.where('point.event_name', '=', eventName ?? ''))
