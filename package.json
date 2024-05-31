@@ -1,0 +1,35 @@
+{
+  "name": "@absinthe-points/api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "lint": "eslint ./src",
+    "start": "nodemon src/index.ts",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@vercel/postgres-kysely": "^0.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-promise-router": "^4.1.1",
+    "express-validator": "^7.1.0",
+    "kysely": "^0.27.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.3.0",
+    "@jest/globals": "^29.7.0",
+    "@types/cors": "^2.8.17",
+    "@types/eslint__js": "^8.42.3",
+    "@types/express": "^4.17.21",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.2",
+    "ts-jest": "^29.1.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5",
+    "typescript-eslint": "^7.11.0"
+  }
+}

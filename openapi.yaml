@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Points API
-  description: Optional multiline or single-line description in [CommonMark](http://commonmark.org/help/) or HTML.
+  description: An API for modifying points as part of a campaign.
   version: 1.0.0
 servers:
   - url: https://api
@@ -62,8 +62,17 @@ paths:
             application/json:
               schema:
                 type: number
+              examples:
+                example:
+                  value: 1000
+        400:
+          $ref: "#/components/responses/ValidationError"
         401:
           $ref: "#/components/responses/UnauthorizedError"
+        403:
+          $ref: "#/components/responses/ForbiddenError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
     put:
       summary: Add points to a specific address.
       description: |
@@ -112,14 +121,72 @@ paths:
             application/json:
               schema:
                 type: number
+        400:
+          $ref: "#/components/responses/ValidationError"
         401:
           $ref: "#/components/responses/UnauthorizedError"
+        403:
+          $ref: "#/components/responses/ForbiddenError"
+        404:
+          $ref: "#/components/responses/NotFoundError"
 
 components:
   responses:
+    ForbiddenError:
+      description: Resource is forbidden.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+                example: forbidden
+              message:
+                type: string
+                example: API Key does not have access to this resource.
+    NotFoundError:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+                example: not-found
+              message:
+                type: string
+                example: No campaign found with id "1234".
     UnauthorizedError:
-      description: API key is missing or invalid.
-
+      description: Authentication is missing or invalid.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+                example: unauthorized
+              message:
+                type: string
+                example: API Key is missing or invalid.
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              reason:
+                type: string
+                example: validation
+              message:
+                type: string
+                example: Request validation failed.
+              errors:
+                type: array
+                example: ['Address must start with "0x".']
   securitySchemes:
     ApiKeyAuth:
       type: apiKey
