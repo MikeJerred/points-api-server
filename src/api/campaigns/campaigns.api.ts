@@ -3,8 +3,8 @@ import Router from 'express-promise-router';
 import { body, param, query } from 'express-validator';
 
 import { logError, validate, withApiKey, withVersion } from '..';
-import { CampaignNotFoundError, InvalidApiKeyError } from '../../data';
 import { createCampaign, distributePoints, getPoints } from '../../data/campaigns';
+import { CampaignNotFoundError, InvalidApiKeyError } from '../../data/errors';
 
 const router = Router();
 router.use(express.json());
@@ -34,7 +34,7 @@ router.get(
   withApiKey(),
   validate([
     param('campaignId').isInt().withMessage('Campaign id must be an integer'),
-    query('address').matches(/0x.*/).withMessage('Address must start with "0x"'),
+    query('address').matches(/^0x[a-f0-9]{40}$/i).withMessage('Address must be a valid EVM address'),
     query('event').isString().optional(),
   ]),
   async (req, res) => {
@@ -73,7 +73,7 @@ router.post(
   withApiKey(),
   validate([
     param('campaignId').isInt().withMessage('Campaign id must be an integer'),
-    body('address').matches(/0x.*/).withMessage('Address must start with "0x"'),
+    body('address').matches(/^0x[a-f0-9]{40}$/i).withMessage('Address must be a valid EVM address'),
     body('event').isString(),
     body('points').isInt({ gt: 0 }).withMessage('Points must be a positive integer'),
   ]),
