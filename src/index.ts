@@ -1,22 +1,10 @@
-import cors from 'cors';
-import express from 'express';
 import 'dotenv/config';
-
-import { errorHandler } from './api';
-import campaignRoutes from './api/campaigns/campaigns.api';
+import app from './app';
 
 process.on('uncaughtException', error => {
   console.error('Uncaught Exception', error);
   process.exit(1);
 });
-
-const app = express();
-
-app.use(cors());
-
-app.use('/campaigns', campaignRoutes);
-
-app.use(errorHandler);
 
 const port = parseInt(process.env['PORT'] ?? '8080');
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
