@@ -13,6 +13,13 @@ paths:
       description: |
         Creates a new campaign, returning an id for the campaign and an API key.
         This API key provides authorization for endpoints related to that campaign.
+      parameters:
+        - in: header
+          name: accept-version
+          example: 1.0.0
+          schema:
+            type: string
+          required: false
       responses:
         200:
           description: OK
@@ -55,6 +62,12 @@ paths:
           schema:
             type: string
           required: false
+        - in: header
+          name: accept-version
+          example: 1.0.0
+          schema:
+            type: string
+          required: false
       responses:
         200:
           description: OK
@@ -86,6 +99,12 @@ paths:
           schema:
             type: integer
           required: true
+        - in: header
+          name: accept-version
+          example: 1.0.0
+          schema:
+            type: string
+          required: false
       requestBody:
         description: a
         required: true

@@ -14,6 +14,12 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
   res.status(500).send({ reason: 'server', message: err.message });
 };
 
+export const withVersion = (): RequestHandler =>
+  async (req, res, next) => {
+    res.locals.version = req.headers['accept-version'] ?? '1.0.0';
+    return next();
+  };
+
 export const withApiKey = (): RequestHandler =>
   async (req, res, next) => {
     await header('X-API-KEY')
