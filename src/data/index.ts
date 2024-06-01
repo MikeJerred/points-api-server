@@ -1,9 +1,6 @@
-import { createKysely } from '@vercel/postgres-kysely';
-import { FileMigrationProvider, Generated, Migrator } from 'kysely';
-import { promises as fs } from 'node:fs';
-import * as path from 'node:path';
+import { Generated } from 'kysely';
 
-export * from './errors';
+export { db } from './database';
 
 interface CampaignTable {
   id: Generated<number>;
@@ -18,37 +15,7 @@ interface PointTable {
   points: number;
 }
 
-interface Database {
-  campaign: CampaignTable;
-  point: PointTable;
-}
-
-export const db = createKysely<Database>();
-
-migrateToLatest();
-
-async function migrateToLatest() {
-  const migrator = new Migrator({
-    db,
-    provider: new FileMigrationProvider({
-      fs,
-      path,
-      migrationFolder: path.join(__dirname, 'migrations'),
-    }),
-  });
-
-  const { error, results } = await migrator.migrateToLatest();
-
-  results?.forEach(result => {
-    if (result.status === 'Success') {
-      console.log(`db migration "${result.migrationName}" was executed successfully`);
-    } else if (result.status === 'Error') {
-      console.error(`failed to execute db migration "${result.migrationName}"`);
-    }
-  })
-
-  if (error) {
-    console.error('failed to migrate', error);
-    process.exit(1);
-  }
+export interface Database {
+  campaigns: CampaignTable;
+  points: PointTable;
 }
